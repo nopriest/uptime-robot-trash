@@ -4,10 +4,6 @@ FROM node:18-alpine
 # 设置工作目录
 WORKDIR /app
 
-# 创建非root用户
-RUN addgroup -g 1001 -S nodejs && \
-    adduser -S nodejs -u 1001
-
 # 复制package.json和package-lock.json
 COPY package*.json ./
 
@@ -20,13 +16,8 @@ COPY src/ ./src/
 COPY config/ ./config/
 COPY public/ ./public/
 
-# 创建必要的目录并设置权限
-RUN mkdir -p /app/logs /app/public && \
-    chown -R nodejs:nodejs /app && \
-    chmod -R 755 /app/logs
-
-# 切换到非root用户
-USER nodejs
+# 创建必要的目录
+RUN mkdir -p /app/logs /app/public
 
 # 暴露端口
 EXPOSE 8003

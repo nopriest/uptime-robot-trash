@@ -942,7 +942,7 @@
 
                 if (response.ok) {
                     loadUrls();
-                    showAlert(`任务已${enabled ? '启用' : '禁用'}`, 'success');
+                    showAlert(result.message || `任务已${enabled ? '启用' : '禁用'}`, 'success');
                 } else {
                     if (response.status === 401) {
                         window.location.replace('/');

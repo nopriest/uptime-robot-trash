@@ -15,8 +15,8 @@ services:
       - ADMIN_PASSWORD=${ADMIN_PASSWORD}
       - FORCE_HTTPS=${FORCE_HTTPS:-false}
     volumes:
-      # 挂载配置文件（便于修改配置）
-      - ./config/urls.json:/app/config/urls.json:ro
+      # 挂载配置目录（便于修改配置）
+      - ./config:/app/config
       # 挂载日志目录（便于查看日志）
       - ./logs:/app/logs
     networks:
