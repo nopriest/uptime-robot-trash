@@ -1,0 +1,39 @@
+# Render部署配置文件
+
+services:
+  # Web Service类型 - 用于运行auto-fangwen应用
+  - type: web
+    name: auto-fangwen
+    env: docker
+    repo: https://github.com/your-username/auto-fangwen.git  # 请修改为您的GitHub仓库地址
+    rootDir: .
+    dockerContext: .
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: oregon
+    branch: main
+    healthCheckPath: /api/health
+    healthCheckTimeout: 10000
+    healthCheckInterval: 30
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: LOG_LEVEL
+        value: info
+      - key: CONFIG_PATH
+        value: /app/config/urls.json
+      - key: WEB_PORT
+        value: 8003
+      - key: SESSION_SECRET
+        generateValue: true
+    disk:
+      name: logs
+      mountPath: /app/logs
+      sizeGB: 1
+
+# Render YAML配置说明
+# 1. 将此文件保存为 render.yaml
+# 2. 修改repo地址为您的GitHub仓库
+# 3. 推送代码到GitHub仓库
+# 4. 在Render控制台导入此配置

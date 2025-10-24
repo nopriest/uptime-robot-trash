@@ -1,0 +1,32 @@
+{
+  "name": "auto-fangwen",
+  "version": "1.0.0",
+  "description": "定时访问URL API的Docker化应用",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "api",
+    "scheduler",
+    "docker",
+    "nodejs"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.6.2",
+    "winston": "^3.11.0",
+    "node-cron": "^3.0.3",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "bcrypt": "^5.1.1",
+    "helmet": "^7.1.0",
+    "cors": "^2.8.5"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

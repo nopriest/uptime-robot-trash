@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  auto-fangwen:
+    build: .
+    container_name: auto-fangwen-render
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - LOG_LEVEL=info
+      - CONFIG_PATH=/app/config/urls.json
+    volumes:
+      # 挂载配置文件
+      - ./config/urls.json:/app/config/urls.json:ro
+      # 挂载日志目录
+      - ./logs:/app/logs
+    ports:
+      # Render需要暴露端口
+      - "3000:3000"
+    networks:
+      - auto-fangwen-network
+    healthcheck:
+      test: ["CMD", "node", "-e", "console.log('Health check passed')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    # Render特定的资源配置
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+
+networks:
+  auto-fangwen-network:
+    driver: bridge

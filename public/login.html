@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto-Fangwen - 管理员登录</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .logo {
+            margin-bottom: 2rem;
+        }
+
+        .logo h1 {
+            color: #333;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .logo p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 0.75rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #c33;
+            display: none;
+        }
+
+        .success-message {
+            background: #efe;
+            color: #3c3;
+            padding: 0.75rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #3c3;
+            display: none;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .footer {
+            margin-top: 2rem;
+            color: #666;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <h1>🤖 Auto-Fangwen</h1>
+            <p>定时访问URL管理系统</p>
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+        <div class="success-message" id="successMessage"></div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="password">管理员密码</label>
+                <input type="password" id="password" name="password" required placeholder="请输入管理员密码">
+            </div>
+            <button type="submit" class="login-btn" id="loginBtn">
+                登录
+            </button>
+        </form>
+
+        <div class="footer">
+            <p>请输入管理员密码以访问配置界面</p>
+        </div>
+    </div>
+
+    <script>
+        // 防止无限刷新的保护机制
+        (function() {
+            const reloadCount = parseInt(window.sessionStorage.getItem('reload-count') || '0');
+            const lastReloadTime = parseInt(window.sessionStorage.getItem('last-reload-time') || '0');
+            const now = Date.now();
+
+            if (reloadCount > 5 && (now - lastReloadTime) < 3000) {
+                console.error('检测到无限刷新，停止页面加载');
+                window.stop();
+                document.body.innerHTML = '<div style="padding: 20px; text-align: center;"><h1>检测到无限刷新</h1><p>页面已被停止加载以保护浏览器。</p><button id="resetBtn">重置并重新加载</button></div>';
+                const resetBtn = document.getElementById('resetBtn');
+                if (resetBtn) {
+                    resetBtn.addEventListener('click', () => {
+                        window.sessionStorage.clear();
+                        location.reload();
+                    });
+                }
+                return;
+            }
+
+            if ((now - lastReloadTime) < 1000) {
+                window.sessionStorage.setItem('reload-count', (reloadCount + 1).toString());
+            } else {
+                window.sessionStorage.setItem('reload-count', '1');
+            }
+            window.sessionStorage.setItem('last-reload-time', now.toString());
+        })();
+
+        const loginForm = document.getElementById('loginForm');
+        const loginBtn = document.getElementById('loginBtn');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+
+        // 显示错误消息
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            successMessage.style.display = 'none';
+        }
+
+        // 显示成功消息
+        function showSuccess(message) {
+            successMessage.textContent = message;
+            successMessage.style.display = 'block';
+            errorMessage.style.display = 'none';
+        }
+
+        // 隐藏所有消息
+        function hideMessages() {
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+        }
+
+        // 设置按钮加载状态
+        function setLoading(loading) {
+            if (loading) {
+                loginBtn.disabled = true;
+                loginBtn.innerHTML = '<span class="loading"></span>登录中...';
+            } else {
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = '登录';
+            }
+        }
+
+        // 处理登录
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideMessages();
+
+            const password = document.getElementById('password').value.trim();
+
+            if (!password) {
+                showError('请输入密码');
+                return;
+            }
+
+            setLoading(true);
+
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    showSuccess('登录成功，正在跳转...');
+                    setTimeout(() => {
+                        window.location.href = window.location.origin + '/';
+                    }, 1000);
+                } else {
+                    showError(data.error || '登录失败');
+                }
+            } catch (error) {
+                showError('网络错误，请重试');
+                console.error('Login error:', error);
+            } finally {
+                setLoading(false);
+            }
+        });
+
+        // 页面加载时检查认证状态
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch('/api/auth/status');
+                const data = await response.json();
+
+                if (data.authenticated) {
+                    window.location.href = window.location.origin + '/';
+                }
+            } catch (error) {
+                console.error('Auth check failed:', error);
+            }
+        });
+
+        // 回车键提交
+        document.getElementById('password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                loginForm.dispatchEvent(new Event('submit'));
+            }
+        });
+    </script>
+</body>
+</html>

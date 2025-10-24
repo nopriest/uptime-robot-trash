@@ -1,0 +1,37 @@
+{
+  "adminPassword": "admin123",
+  "urls": [
+    {
+      "id": "2123",
+      "url": "https://uptime-test.frostbolt817.workers.dev/trigger",
+      "method": "GET",
+      "intervalSeconds": 180,
+      "randomRange": 30,
+      "enabled": true
+    },
+    {
+      "id": "uptime-1",
+      "url": "https://uptime-1.frostbolt817.workers.dev/trigger",
+      "method": "GET",
+      "intervalSeconds": 300,
+      "randomRange": 30,
+      "enabled": true
+    },
+    {
+      "id": "uptime-2-toolify",
+      "url": "https://uptime-2-toolify.frostbolt817.workers.dev",
+      "method": "GET",
+      "intervalSeconds": 180,
+      "randomRange": 30,
+      "enabled": true
+    },
+    {
+      "id": "uptime-3-gptload",
+      "url": "https://uptime-3-gptload.frostbolt817.workers.dev/",
+      "method": "GET",
+      "intervalSeconds": 200,
+      "randomRange": 30,
+      "enabled": true
+    }
+  ]
+}

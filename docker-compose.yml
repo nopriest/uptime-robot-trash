@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  auto-fangwen:
+    build: .
+    container_name: auto-fangwen
+    restart: unless-stopped
+    ports:
+      - "8003:8003"  # 映射容器端口8003到主机端口8003
+    environment:
+      - NODE_ENV=${NODE_ENV:-production}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - CONFIG_PATH=/app/config/urls.json
+      - SESSION_SECRET=${SESSION_SECRET}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - FORCE_HTTPS=${FORCE_HTTPS:-false}
+    volumes:
+      # 挂载配置文件（便于修改配置）
+      - ./config/urls.json:/app/config/urls.json:ro
+      # 挂载日志目录（便于查看日志）
+      - ./logs:/app/logs
+    networks:
+      - auto-fangwen-network
+    # 添加健康检查
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:8003/api/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) }).on('error', () => process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    # 添加资源限制
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+
+networks:
+  auto-fangwen-network:
+    driver: bridge
