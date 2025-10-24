@@ -19,17 +19,17 @@
     },
     {
       "id": "uptime-2-toolify",
-      "url": "https://uptime-2-toolify.frostbolt817.workers.dev",
+      "url": "https://uptime-2-toolify.frostbolt817.workers.dev/trigger",
       "method": "GET",
-      "intervalSeconds": 180,
+      "intervalSeconds": 400,
       "randomRange": 30,
       "enabled": true
     },
     {
       "id": "uptime-3-gptload",
-      "url": "https://uptime-3-gptload.frostbolt817.workers.dev/",
+      "url": "https://uptime-3-gptload.frostbolt817.workers.dev/trigger",
       "method": "GET",
-      "intervalSeconds": 200,
+      "intervalSeconds": 500,
       "randomRange": 30,
       "enabled": true
     }
