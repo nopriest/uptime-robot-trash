@@ -77,7 +77,7 @@ function clearLogs(isStartup = false) {
           const stats = fs.statSync(logFile);
           const fileSizeInMB = stats.size / (1024 * 1024);
           
-          if (fileSizeInMB > 1 || isStartup) {
+          if (fileSizeInMB > 1) {
             // 尝试清空文件，如果权限不足则跳过
             try {
               fs.writeFileSync(logFile, '', 'utf8');
