@@ -997,7 +997,7 @@
         // 加载日志
         async function loadLogs() {
             try {
-                const response = await fetch('/api/logs?type=combined&lines=50');
+                const response = await fetch(`/api/logs?type=combined&lines=50&t=${Date.now()}`);
                 const data = await response.json();
 
                 const logsContainer = document.getElementById('logsContainer');

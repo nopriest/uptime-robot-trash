@@ -306,6 +306,8 @@ class WebServer {
         // 返回最后N行
         const recentLogs = logLines.slice(-lines);
 
+        // 禁用缓存
+        res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
         res.json({ logs: recentLogs });
 
       } catch (error) {
