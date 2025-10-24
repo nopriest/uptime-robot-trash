@@ -177,7 +177,8 @@ class Scheduler {
   enableTask(id) {
     const config = this.urlConfigs.get(id);
     if (!config) {
-      throw new Error(`任务不存在: ${id}`);
+      logger.warn(`任务不存在: ${id}`);
+      return;
     }
 
     if (this.timers.has(id)) {
@@ -197,6 +198,10 @@ class Scheduler {
     const timer = this.timers.get(id);
     if (!timer) {
       logger.warn(`任务不存在或未启用: ${id}`);
+      const config = this.urlConfigs.get(id);
+      if (config) {
+        config.enabled = false;
+      }
       return;
     }
 
