@@ -28,9 +28,11 @@ class WebServer {
           defaultSrc: ["'self'"],
           styleSrc: ["'self'", "'unsafe-inline'"],
           scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
-          imgSrc: ["'self'", "data:"]
+          imgSrc: ["'self'", "data:"],
+          upgradeInsecureRequests: null // 禁用自动升级到HTTPS
         }
-      }
+      },
+      hsts: false // 禁用HSTS
     }));
 
     // CORS支持
