@@ -27,10 +27,13 @@ services:
         value: 8003
       - key: SESSION_SECRET
         generateValue: true
-    disk:
-      name: logs
-      mountPath: /app/logs
-      sizeGB: 1
+    disks:
+      - name: logs
+        mountPath: /app/logs
+        sizeGB: 1
+      - name: config
+        mountPath: /app/config
+        sizeGB: 1
 
 # Render YAML配置说明
 # 1. 将此文件保存为 render.yaml
